@@ -1,5 +1,10 @@
+import { type AddAccountRepository } from '../../../../data/protocols/add-account-repository'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account-mongo-repository'
+
+const makeSut = (): AddAccountRepository => {
+  return new AccountMongoRepository()
+}
 
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
@@ -11,7 +16,7 @@ describe('Account Mongo Repository', () => {
   })
 
   it('should return an account on success', async () => {
-    const sut = new AccountMongoRepository()
+    const sut = makeSut()
 
     const account = await sut.add({
       name: 'valid_name',

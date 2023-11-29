@@ -2,6 +2,10 @@ import { type Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { LogMongoRepository } from './log-mongo-repository'
 
+const makeSut = (): LogMongoRepository => {
+  return new LogMongoRepository()
+}
+
 describe('Log Mongo Repository', () => {
   let errorCollection: Collection
 
@@ -19,7 +23,7 @@ describe('Log Mongo Repository', () => {
   })
 
   it('should be add stack error on mongo', async () => {
-    const sut = new LogMongoRepository()
+    const sut = makeSut()
     await sut.logError('any_stack')
     const count = await errorCollection.countDocuments()
     expect(count).toBe(1)

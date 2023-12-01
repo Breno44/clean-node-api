@@ -1,5 +1,5 @@
 import { InvalidParamError, MissingParamError } from '../../errors'
-import { badRequest } from '../../helpers/http-helper'
+import { badRequest, serverError } from '../../helpers/http-helper'
 import { type Controller, type HttpRequest, type HttpResponse } from '../../protocols'
 import { type EmailValidator } from '../signup/signup-protocols'
 
@@ -11,20 +11,24 @@ export class LoginController implements Controller {
   }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const requiredFields = ['email', 'password']
+    try {
+      const requiredFields = ['email', 'password']
 
-    for (const field of requiredFields) {
-      if (!httpRequest.body[field]) {
-        return badRequest(new MissingParamError(field))
+      for (const field of requiredFields) {
+        if (!httpRequest.body[field]) {
+          return badRequest(new MissingParamError(field))
+        }
       }
-    }
 
-    const { email } = httpRequest.body
+      const { email } = httpRequest.body
 
-    const emailIsValid = this.emailValidator.isValid(email)
+      const emailIsValid = this.emailValidator.isValid(email)
 
-    if (!emailIsValid) {
-      return badRequest(new InvalidParamError('email'))
+      if (!emailIsValid) {
+        return badRequest(new InvalidParamError('email'))
+      }
+    } catch (error) {
+      return serverError(error)
     }
   }
 }

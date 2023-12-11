@@ -5,21 +5,40 @@ export interface LoadAccountByEmailRepository {
   find: (email: string) => Promise<AccountModel>
 }
 
-describe('DbAuthentication UseCase', () => {
-  it('should call LoadAccountByEmailRepo with correct email', async () => {
-    class LoadAccountByEmailRepo implements LoadAccountByEmailRepository {
-      async find (email: string): Promise<AccountModel> {
-        return {
-          email: '',
-          id: '',
-          name: '',
-          password: ''
-        }
+const makeLoadAccount = (): LoadAccountByEmailRepository => {
+  class LoadAccount implements LoadAccountByEmailRepository {
+    async find (email: string): Promise<AccountModel> {
+      return {
+        email: '',
+        id: '',
+        name: '',
+        password: ''
       }
     }
-    const loadAccountByEmailRepo = new LoadAccountByEmailRepo()
-    const sut = new DbAuthentication(loadAccountByEmailRepo)
-    const findSpy = jest.spyOn(loadAccountByEmailRepo, 'find')
+  }
+
+  return new LoadAccount()
+}
+
+interface SutTypes {
+  sut: DbAuthentication
+  loadAccount: LoadAccountByEmailRepository
+}
+
+const makeSut = (): SutTypes => {
+  const loadAccount = makeLoadAccount()
+  const sut = new DbAuthentication(loadAccount)
+
+  return {
+    sut,
+    loadAccount
+  }
+}
+
+describe('DbAuthentication UseCase', () => {
+  it('should call LoadAccountByEmailRepo with correct email', async () => {
+    const { sut, loadAccount } = makeSut()
+    const findSpy = jest.spyOn(loadAccount, 'find')
 
     await sut.auth({ email: 'any_email@mail.com', password: '' })
 

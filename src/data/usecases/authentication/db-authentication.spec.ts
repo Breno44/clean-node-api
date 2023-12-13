@@ -40,7 +40,7 @@ const makeHashComparer = (): HashComparer => {
 const makeTokenGenerator = (): TokenGenerator => {
   class TokenGeneratorStub implements TokenGenerator {
     async generate (id: string): Promise<string> {
-      return ''
+      return 'any_token'
     }
   }
 
@@ -145,5 +145,13 @@ describe('DbAuthentication UseCase', () => {
     const promise = sut.auth(makeFakeAuthentication())
 
     await expect(promise).rejects.toThrow()
+  })
+
+  it('should return accessToken if authentication succeeds', async () => {
+    const { sut } = makeSut()
+
+    const accessToken = await sut.auth(makeFakeAuthentication())
+
+    expect(accessToken).toBe('any_token')
   })
 })

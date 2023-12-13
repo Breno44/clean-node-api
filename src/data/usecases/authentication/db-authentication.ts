@@ -1,11 +1,14 @@
 import { type Authentication, type AuthenticationModel } from '../../../domain/usecases/authentication'
+import type { HashComparer } from '../../protocols/criptography/hash-compare'
 import { type LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 
 export class DbAuthentication implements Authentication {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
+  private readonly hashComparer: HashComparer
 
-  constructor (loadAccountByEmailRepository: LoadAccountByEmailRepository) {
+  constructor (loadAccountByEmailRepository: LoadAccountByEmailRepository, hashComparer: HashComparer) {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository
+    this.hashComparer = hashComparer
   }
 
   async auth (authentication: AuthenticationModel): Promise<string> {
@@ -14,5 +17,7 @@ export class DbAuthentication implements Authentication {
     if (!account) {
       return null
     }
+
+    await this.hashComparer.compare({ value: authentication.password, hash: account.password })
   }
 }

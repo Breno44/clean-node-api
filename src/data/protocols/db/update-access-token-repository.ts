@@ -1,5 +1,7 @@
+import type { ObjectId } from 'mongodb'
+
 export interface UpdateAccessTokenModel {
-  id: string
+  id: ObjectId
   accessToken: string
 }
 

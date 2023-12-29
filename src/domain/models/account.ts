@@ -1,5 +1,7 @@
+import type { ObjectId } from 'mongodb'
+
 export interface AccountModel {
-  id: string
+  id: ObjectId
   name: string
   email: string
   password: string

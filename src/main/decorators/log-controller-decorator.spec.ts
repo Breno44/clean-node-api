@@ -1,8 +1,9 @@
-import { type LogErrorRepository } from '../../data/protocols/db/log-error-repository'
+import { type ObjectId } from 'mongodb'
+import { type LogErrorRepository } from '../../data/protocols/db/log/log-error-repository'
 import { type AccountModel } from '../../domain/models/account'
 import { ok, serverError } from '../../presentation/helpers/http/http-helper'
 import { type HttpResponse, type Controller, type HttpRequest } from '../../presentation/protocols'
-import { LogControllerDecorator } from './log'
+import { LogControllerDecorator } from './log-controller-decorator'
 
 const makeLogErrorRepository = (): LogErrorRepository => {
   class LogErrorRepositoryStub implements LogErrorRepository {
@@ -34,7 +35,7 @@ const makeFakeRequest = (): HttpRequest => (
 )
 
 const makeFakeAccount: () => AccountModel = (): AccountModel => ({
-  id: 'valid_id',
+  id: 'valid_id' as unknown as ObjectId,
   name: 'valid_name',
   email: 'valid_email@mail.com',
   password: 'valid_password'

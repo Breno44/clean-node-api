@@ -1,5 +1,6 @@
 import type { AddAccountRepository, AccountModel, AddAccountModel, Hasher } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
+import type { ObjectId } from 'mongodb'
 
 const makeHasher = (): Hasher => {
   class HasherStub implements Hasher {
@@ -22,7 +23,7 @@ const makeAddAccountRepository = (): AddAccountRepository => {
 }
 
 const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
+  id: 'valid_id' as unknown as ObjectId,
   name: 'valid_name',
   email: 'valid_email',
   password: 'hashed_password'

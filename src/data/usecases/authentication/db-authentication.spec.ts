@@ -1,8 +1,9 @@
 import type { AccountModel, AuthenticationModel, HashComparer, HashComparerParams, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenModel, UpdateAccessTokenRepository } from './db-authentication-protocols'
 import { DbAuthentication } from './db-authentication'
+import type { ObjectId } from 'mongodb'
 
 const makeFakeAccount = (): AccountModel => ({
-  id: 'any_id',
+  id: 'any_id' as unknown as ObjectId,
   name: 'any_name',
   email: 'any_email',
   password: 'hashed_password'
